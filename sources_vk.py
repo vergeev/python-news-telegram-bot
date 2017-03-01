@@ -20,7 +20,7 @@ def ask_for_password_and_get_session():
     return vk.AuthSession(user_login=login, user_password=password, app_id=app_id)
 
 
-def get_vk_public_page_list(vk_api, search_queries, results_per_query = 20):
+def get_vk_public_page_list(vk_api, search_queries, results_per_query=20):
     public_pages = []
     for query in search_queries:
         search_res = vk_api.groups.search(q=query, type='page', offset=results_per_query)
@@ -36,7 +36,7 @@ def get_argument_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument('-o', '--outfile', type=argparse.FileType('w'), default=sys.stdout)
     return parser
-    
+
 
 if __name__ == '__main__':
     args = get_argument_parser().parse_args()
