@@ -58,6 +58,15 @@ class TestVkSources(unittest.TestCase):
             for field in relevant_fields:
                 self.assertNotEqual(post[field], None)
 
+    def test_filter_lifeless_vk_pages(self):
+        api = self.get_vk_api()
+        # one should check if the pages are still in live/dead state 
+        # by visiting vk.com/club{id}
+        known_input = {30666517, 101965347, 104116333}
+        known_output = {30666517, 101965347}
+        output = sources_vk.filter_lifeless_vk_pages(api, known_input)
+        self.assertEqual(output, known_output)
+
 
 if __name__ == '__main__':
     unittest.main()
