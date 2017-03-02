@@ -28,12 +28,13 @@ class TestVkSources(unittest.TestCase):
         output = sources_vk.get_vk_public_page_id_set(known_input)
         self.assertEqual(output, known_output)
 
-    def test_retrieve_default_number_of_posts(self):
+    def test_retrieve_vk_posts(self):
         api = self.get_vk_api()
-        default_number_of_posts = 5
+        number_of_posts = 5
         tproger_page_id = 30666517
-        posts = sources_vk.get_last_vk_community_posts(api, tproger_page_id)
-        self.assertEqual(len(posts), default_number_of_posts)
+        posts = sources_vk.get_last_vk_community_posts(api, tproger_page_id, 
+                                                       count=number_of_posts)
+        self.assertEqual(len(posts), number_of_posts)
         for post in posts:
             self.assertIsInstance(post, dict)
 
