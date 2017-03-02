@@ -39,6 +39,21 @@ def get_last_vk_community_posts(vk_api, community_id, count=5):
     return posts[1:]
 
 
+def form_vk_post_link(page_id, post_id):
+    return "https://vk.com/wall%d_%d" % (page_id, post_id)
+
+
+def strip_irrelevant_post_info(raw_post):
+    return {'date': raw_post['date'],
+            'text': raw_post['text'],
+            'link': form_vk_post_link(raw_post['from_id'], raw_post['id']),
+            }
+
+
+def get_stripped_vk_posts(post_list):
+    return [strip_irrelevant_post_info(post) for post in post_list]
+
+
 def get_argument_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument('-o', '--outfile', type=argparse.FileType('w'), default=sys.stdout)
