@@ -54,7 +54,7 @@ class TestVkSources(unittest.TestCase):
                        ]
         output = sources_vk.get_stripped_vk_posts(known_input)
         for post in output:
-            self.assertEqual(post.get('irrelevant_field', None), None)
+            self.assertEqual(post.get('irrelevant_field'), None)
             for field in relevant_fields:
                 self.assertNotEqual(post[field], None)
 
@@ -63,9 +63,10 @@ class TestVkSources(unittest.TestCase):
         # one should check if the pages are still in live/dead state 
         # by visiting vk.com/club{id}
         known_input = {30666517, 101965347, 104116333}
-        known_output = {30666517, 101965347}
-        output = sources_vk.filter_lifeless_vk_pages(api, known_input)
-        self.assertEqual(output, known_output)
+        expected_output = {30666517, 101965347}
+        filtering_rule = sources_vk.is_lifeless_vk_page
+        output = sources_vk.filter_vk_pages(api, known_input, filtering_rule)
+        self.assertEqual(output, expected_output)
 
 
 if __name__ == '__main__':

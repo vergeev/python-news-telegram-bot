@@ -62,14 +62,14 @@ def is_lifeless_vk_page(vk_api, page_id):
     return False
 
 
-def filter_lifeless_vk_pages(vk_api, page_id_set):
-    living_vk_page_ids = set()
+def filter_vk_pages(vk_api, page_id_set, is_bad_page_id):
+    good_vk_page_ids = set()
     for page_id in page_id_set:
-        if is_lifeless_vk_page(vk_api, page_id):
+        if is_bad_page_id(vk_api, page_id):
             continue
-        living_vk_page_ids.add(page_id)
-    return living_vk_page_ids
-
+        good_vk_page_ids.add(page_id)
+    return good_vk_page_ids
+    
 
 #FIXME: move get_striped_vk_posts to the appropriate module
 def form_vk_post_link(page_id, post_id):
