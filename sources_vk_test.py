@@ -37,6 +37,26 @@ class TestVkSources(unittest.TestCase):
         for post in posts:
             self.assertIsInstance(post, dict)
 
+    def test_form_vk_post_link(self):
+        page_id = -30666517
+        post_id = 1472604
+        known_result = 'https://vk.com/wall-30666517_1472604'
+        result = sources_vk.form_vk_post_link(page_id, post_id)
+        self.assertEqual(result, known_result)
+
+    def test_get_stripped_vk_posts(self):
+        relevant_fields = ['date', 'text', 'link']
+        known_input = [{'date': 1, 'id': 1,
+                        'text': 'qwe', 'from_id': 1},
+                       {'irrelevant_field': 1, 'date': 1,
+                        'text': 'qwe', 'from_id': 1, 'id': 1},
+                       ]
+        output = sources_vk.get_stripped_vk_posts(known_input)
+        for post in output:
+            self.assertEqual(post.get('irrelevant_field', None), None)
+            for field in relevant_fields:
+                self.assertNotEqual(post[field], None)
+
 
 if __name__ == '__main__':
     unittest.main()
