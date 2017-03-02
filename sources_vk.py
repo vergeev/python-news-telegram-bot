@@ -1,4 +1,5 @@
 import os
+import time
 import getpass
 import argparse
 import sys
@@ -17,6 +18,7 @@ def ask_for_password_and_get_session():
     app_id = os.environ['VK_API_APP_ID']
     login = input('VK login: ')
     password = getpass.getpass('Password: ')
+    #FIXME: save access token to environ
     return vk.AuthSession(user_login=login, user_password=password, app_id=app_id)
 
 
@@ -32,13 +34,44 @@ def get_vk_public_page_id_set(public_page_list):
     return {page['gid'] for page in public_page_list}
 
 
-def get_last_vk_community_posts(vk_api, community_id, count=5):
+def get_last_vk_community_posts(vk_api, community_id, count=10):
     # for additional info, see https://vk.com/dev/wall.get
     owner_id = -1 * community_id  # indicate that this is a community
     posts = vk_api.wall.get(owner_id=owner_id, filter='owner', count=count)
     return posts[1:]
 
 
+def is_less_than_day(seconds):
+    return seconds < 24 * 60 * 60
+
+
+def select_latest_post(vk_post_list):
+    return max(vk_post_list, key=lambda p: p['date'])
+
+
+def is_lifeless_vk_page(vk_api, page_id):
+    number_of_posts_to_test = 5
+    posts = get_last_vk_community_posts(vk_api, page_id, count=number_of_posts_to_test)
+    latest_post_time_difference = time.time() - select_latest_post(posts)['date']
+    if not is_less_than_day(latest_post_time_difference):
+        return True
+    for index, post in enumerate(posts[2:]):
+        time_difference = posts[index - 1]['date'] - post['date']
+        if not is_less_than_day(time_difference):
+            return True
+    return False
+
+
+def filter_lifeless_vk_pages(vk_api, page_id_set):
+    living_vk_page_ids = set()
+    for page_id in page_id_set:
+        if is_lifeless_vk_page(vk_api, page_id):
+            continue
+        living_vk_page_ids.add(page_id)
+    return living_vk_page_ids
+
+
+#FIXME: move get_striped_vk_posts to the appropriate module
 def form_vk_post_link(page_id, post_id):
     return "https://vk.com/wall%d_%d" % (page_id, post_id)
 
