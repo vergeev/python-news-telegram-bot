@@ -23,7 +23,7 @@ def ask_for_password_and_get_session():
 def get_vk_public_page_list(vk_api, search_queries, results_per_query=20):
     public_pages = []
     for query in search_queries:
-        search_res = vk_api.groups.search(q=query, type='page', offset=results_per_query)  #FIXME: substitute offset with count
+        search_res = vk_api.groups.search(q=query, type='page', count=results_per_query)
         public_pages += search_res[1:]
     return public_pages
 
