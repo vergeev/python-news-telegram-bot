@@ -23,13 +23,20 @@ def ask_for_password_and_get_session():
 def get_vk_public_page_list(vk_api, search_queries, results_per_query=20):
     public_pages = []
     for query in search_queries:
-        search_res = vk_api.groups.search(q=query, type='page', offset=results_per_query)
+        search_res = vk_api.groups.search(q=query, type='page', offset=results_per_query)  #FIXME: substitute offset with count
         public_pages += search_res[1:]
     return public_pages
 
 
 def get_vk_public_page_id_set(public_page_list):
     return {page['gid'] for page in public_page_list}
+
+
+def get_last_vk_community_posts(vk_api, community_id, count=5):
+    # for additional info, see https://vk.com/dev/wall.get
+    owner_id = -1 * community_id  # indicate that this is a community
+    posts = vk_api.wall.get(owner_id=owner_id, filter='owner', count=count)
+    return posts[1:]
 
 
 def get_argument_parser():
