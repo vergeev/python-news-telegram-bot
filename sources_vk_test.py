@@ -10,12 +10,13 @@ class TestVkSources(unittest.TestCase):
         session = session or sources_vk.ask_for_password_and_get_session()
         return vk.API(session)
         
-    def test_retrieve_default_number_of_pages_from_vk(self):
+    def test_retrieve_public_pages_from_vk(self):
         api = self.get_vk_api()
-        default_number_of_pages = 20
+        number_of_pages = 25
         search_queries = ['VK']
-        result = sources_vk.get_vk_public_page_list(api, search_queries)
-        self.assertEqual(len(result), default_number_of_pages)
+        result = sources_vk.get_vk_public_page_list(api, search_queries, 
+                                                    results_per_query=number_of_pages)
+        self.assertEqual(len(result), number_of_pages)
         for public_page in result:
             self.assertIsInstance(public_page, dict)
 
