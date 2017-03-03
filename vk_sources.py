@@ -118,4 +118,4 @@ if __name__ == '__main__':
     page_ids = get_vk_public_page_id_set(pages)
     page_ids = filter_vk_pages(access_token, page_ids, is_lifeless_vk_page)
     page_ids = filter_vk_pages(access_token, page_ids, is_spam_vk_page)
-    save_data(page_ids, args.outfile)
+    save_data(list(page_ids), args.outfile)
