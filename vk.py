@@ -35,7 +35,7 @@ def wall_get(access_token, *, owner_id, filter, fields=None, count=10):
     return post_list
 
 
-def get_group_by_id(access_token, *, group_id, fields):
+def group_get_by_id(access_token, *, group_id, fields):
     response = make_vk_api_request('groups.getById', access_token=access_token,
                                    group_id=group_id, fields=fields)
     group = response['response']
