@@ -34,6 +34,15 @@ class TestVkRequest(unittest.TestCase):
         for post in output:
             self.assertIsInstance(post, dict)
 
+    def test_get_group_by_id(self):
+        access_token = os.environ.get('VK_ACCESS_TOKEN')
+        group_id = 30666517
+        output = vk.get_group_by_id(access_token, group_id=group_id, fields='description')
+        self.assertEqual(len(output), 1)
+        for post in output:
+            self.assertIsInstance(post, dict)
+
+    
 
 if __name__ == '__main__':
     unittest.main()
