@@ -26,6 +26,14 @@ class TestVkRequest(unittest.TestCase):
         with self.assertRaises(vk.VkRequestError):
             vk.groups_search('bad access token', query='VK', type='page', count=count)
 
+    def test_wall_get(self):
+        access_token = os.environ.get('VK_ACCESS_TOKEN')
+        count = 10
+        output = vk.wall_get(access_token, owner_id=1, filter='owner', count=count)
+        self.assertEqual(len(output), count)
+        for post in output:
+            self.assertIsInstance(post, dict)
+
 
 if __name__ == '__main__':
     unittest.main()

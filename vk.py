@@ -26,3 +26,9 @@ def groups_search(access_token, *, query, type, count=20):
                                    q=query, type=type, count=count)
     group_list = response['response'][1:]  # the first element is the number of groups
     return group_list
+
+def wall_get(access_token, *, owner_id, filter, fields=None, count=10):
+    response = make_vk_api_request('wall.get', access_token=access_token, fields=fields,
+                                   owner_id=owner_id, filter=filter, count=count)
+    post_list = response['response'][1:]  # the first element is the number of posts
+    return post_list
