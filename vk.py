@@ -1,15 +1,19 @@
 import os
+import time
 import requests
 
 
-class VkRequestError(Exception): pass  # TODO: add code property
+class VkRequestError(Exception): 
+    def __init__(self, message, error_code):
+        super(Exception, self).__init__('%d: %s' % (error_code, message))
+        self.error_code = error_code
 
 
 def raise_if_vk_error(json_response):
     if 'error' in json_response:
         error_code = json_response['error']['error_code']
         error_msg = json_response['error']['error_msg']
-        raise VkRequestError("%d: %s" % (error_code, error_msg))
+        raise VkRequestError(error_msg, error_code)
 
 
 def make_vk_api_request(method, **params):
@@ -19,6 +23,18 @@ def make_vk_api_request(method, **params):
     json_response = response.json() 
     raise_if_vk_error(json_response)
     return json_response
+
+
+def invoke_with_cooldown(function, **kwargs):
+    too_many_requests_error_code = 6
+    cooldown_seconds = 3
+    try:
+        return function(**kwargs)
+    except VkRequestError as e:
+        if e.error_code != too_many_requests_error_code:
+            raise
+        time.sleep(cooldown_seconds)
+        return function(**kwargs)
 
 
 def groups_search(access_token, *, query, type, count=20):

@@ -20,7 +20,9 @@ def get_vk_public_page_id_set(public_page_list):
 
 def get_last_vk_community_posts(access_token, community_id, count=10):
     owner_id = -1 * community_id  # indicate that this is a community
-    post_list = vk.wall_get(access_token, owner_id=owner_id, filter='owner', count=count)
+    wall_get = vk.wall_get
+    post_list = vk.invoke_with_cooldown(wall_get, access_token=access_token, 
+                                        owner_id=owner_id, filter='owner', count=count)
     return post_list
 
 
@@ -108,7 +110,7 @@ def get_argument_parser():
 if __name__ == '__main__':
     args = get_argument_parser().parse_args()
     access_token = get_access_token()
-    if token is None:
+    if access_token is None:
         print_no_access_token_error()
         sys.exit()
     search_queries = ['программист', 'программирование', 'Python']
@@ -116,4 +118,4 @@ if __name__ == '__main__':
     page_ids = get_vk_public_page_id_set(pages)
     page_ids = filter_vk_pages(access_token, page_ids, is_lifeless_vk_page)
     page_ids = filter_vk_pages(access_token, page_ids, is_spam_vk_page)
-    save_data(page_ids, outfile)
+    save_data(page_ids, args.outfile)
