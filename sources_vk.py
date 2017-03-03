@@ -3,30 +3,14 @@ import time
 import getpass
 import argparse
 import sys
-import vk
 import json
+import vk
 
-
-def try_to_fetch_existing_session():
-    token = os.environ.get('VK_ACCESS_TOKEN')
-    if token is None:
-        return None
-    return vk.AuthSession(access_token=token)
-
-
-def ask_for_password_and_get_session():
-    app_id = os.environ['VK_API_APP_ID']
-    login = input('VK login: ')
-    password = getpass.getpass('Password: ')
-    #FIXME: save access token to environ
-    return vk.AuthSession(user_login=login, user_password=password, app_id=app_id)
-
-
-def get_vk_public_page_list(vk_api, search_queries, results_per_query=20):
+def get_vk_public_page_list(access_token, search_queries, results_per_query=20):
     public_pages = []
     for query in search_queries:
-        search_res = vk_api.groups.search(q=query, type='page', count=results_per_query)
-        public_pages += search_res[1:]
+        public_pages += vk.groups_search(access_token, query=query, type='page', 
+                                         count=results_per_query)
     return public_pages
 
 
@@ -34,11 +18,10 @@ def get_vk_public_page_id_set(public_page_list):
     return {page['gid'] for page in public_page_list}
 
 
-def get_last_vk_community_posts(vk_api, community_id, count=10):
-    # for additional info, see https://vk.com/dev/wall.get
+def get_last_vk_community_posts(access_token, community_id, count=10):
     owner_id = -1 * community_id  # indicate that this is a community
-    posts = vk_api.wall.get(owner_id=owner_id, filter='owner', count=count)
-    return posts[1:]
+    post_list = vk.wall_get(access_token, owner_id=owner_id, filter='owner', count=count)
+    return post_list
 
 
 def is_less_than_day(seconds):
@@ -49,9 +32,10 @@ def select_latest_post(vk_post_list):
     return max(vk_post_list, key=lambda p: p['date'])
 
 
-def is_lifeless_vk_page(vk_api, page_id):
+def is_lifeless_vk_page(access_token, page_id):
     number_of_posts_to_test = 5
-    posts = get_last_vk_community_posts(vk_api, page_id, count=number_of_posts_to_test)
+    posts = get_last_vk_community_posts(access_token, page_id, 
+                                        count=number_of_posts_to_test)
     latest_post_time_difference = time.time() - select_latest_post(posts)['date']
     if not is_less_than_day(latest_post_time_difference):
         return True
@@ -62,8 +46,12 @@ def is_lifeless_vk_page(vk_api, page_id):
     return False
 
 
-def is_spam_vk_page(vk_api, page_id):
-    page = vk_api.groups.getById(group_id=page_id, fields='description')[0]
+def get_group_by_id_with_description(access_token, group_id):
+    return vk.group_get_by_id(access_token, group_id=group_id, fields='description')[0]
+
+
+def is_spam_vk_page(access_token, page_id):
+    page = get_group_by_id_with_description(access_token, page_id)
     stop_words = ['курсов', 'помощь', 'на заказ']
     for stop_word in stop_words:
         if stop_word.lower() in page['name'].lower():
@@ -73,10 +61,10 @@ def is_spam_vk_page(vk_api, page_id):
     return False
 
 
-def filter_vk_pages(vk_api, page_id_set, is_bad_page_id):
+def filter_vk_pages(access_token, page_id_set, is_bad_page_id):
     good_vk_page_ids = set()
     for page_id in page_id_set:
-        if is_bad_page_id(vk_api, page_id):
+        if is_bad_page_id(access_token, page_id):
             continue
         good_vk_page_ids.add(page_id)
     return good_vk_page_ids
@@ -102,6 +90,15 @@ def get_stripped_vk_posts(post_list):
     return [strip_irrelevant_post_info(post) for post in post_list]
 
 
+def get_access_token():
+    return os.environ.get('VK_ACCESS_TOKEN')
+
+
+def print_no_access_token_error():
+    print('No access token in VK_ACCESS_TOKEN environment variable.')
+    print('Please see README.md on how to get it.')
+
+
 def get_argument_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument('-o', '--outfile', type=argparse.FileType('w'), default=sys.stdout)
@@ -110,11 +107,13 @@ def get_argument_parser():
 
 if __name__ == '__main__':
     args = get_argument_parser().parse_args()
+    access_token = get_access_token()
+    if token is None:
+        print_no_access_token_error()
+        sys.exit()
     search_queries = ['программист', 'программирование', 'Python']
-    session = try_to_fetch_existing_session() or ask_for_password_and_get_session()
-    api = vk.API(session)
-    pages = get_vk_public_page_list(api, search_queries)
+    pages = get_vk_public_page_list(access_token, search_queries)
     page_ids = get_vk_public_page_id_set(pages)
-    page_ids = filter_vk_pages(api, page_ids, is_lifeless_vk_page)
-    page_ids = filter_vk_pages(api, page_ids, is_spam_vk_page)
+    page_ids = filter_vk_pages(access_token, page_ids, is_lifeless_vk_page)
+    page_ids = filter_vk_pages(access_token, page_ids, is_spam_vk_page)
     save_data(page_ids, outfile)

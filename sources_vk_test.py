@@ -5,16 +5,11 @@ import vk
 
 class TestVkSources(unittest.TestCase):
 
-    def get_vk_api(self):
-        session = sources_vk.try_to_fetch_existing_session()
-        session = session or sources_vk.ask_for_password_and_get_session()
-        return vk.API(session)
-        
     def test_retrieve_public_pages_from_vk(self):
-        api = self.get_vk_api()
+        access_token = sources_vk.get_access_token()
         number_of_pages = 25
         search_queries = ['VK']
-        output = sources_vk.get_vk_public_page_list(api, search_queries, 
+        output = sources_vk.get_vk_public_page_list(access_token, search_queries, 
                                                     results_per_query=number_of_pages)
         self.assertEqual(len(output), number_of_pages)
         for public_page in output:
@@ -29,11 +24,11 @@ class TestVkSources(unittest.TestCase):
         self.assertEqual(output, expected_output)
 
     def test_retrieve_vk_posts(self):
-        api = self.get_vk_api()
+        access_token = sources_vk.get_access_token()
         number_of_posts = 5
         tproger_page_id = 30666517
-        result = sources_vk.get_last_vk_community_posts(api, tproger_page_id, 
-                                                       count=number_of_posts)
+        result = sources_vk.get_last_vk_community_posts(access_token, tproger_page_id, 
+                                                        count=number_of_posts)
         self.assertEqual(len(result), number_of_posts)
         for post in result:
             self.assertIsInstance(post, dict)
@@ -59,23 +54,23 @@ class TestVkSources(unittest.TestCase):
                 self.assertNotEqual(post[field], None)
 
     def test_filter_lifeless_vk_pages(self):
-        api = self.get_vk_api()
+        access_token = sources_vk.get_access_token()
         # one should check if the pages are still in live/dead state 
         # by visiting vk.com/club{id}
         known_input = {30666517, 101965347, 104116333}
         expected_output = {30666517, 101965347}
         filtering_rule = sources_vk.is_lifeless_vk_page
-        output = sources_vk.filter_vk_pages(api, known_input, filtering_rule)
+        output = sources_vk.filter_vk_pages(access_token, known_input, filtering_rule)
         self.assertEqual(output, expected_output)
 
     def test_filter_spam_vk_pages(self):
-        api = self.get_vk_api()
+        access_token = sources_vk.get_access_token()
         # one should check if the pages are still not banned and stuff 
         # by visiting vk.com/club{id}
         known_input = {30666517, 101965347, 35583485, 103174736}
         expected_output = {30666517, 101965347}
         filtering_rule = sources_vk.is_spam_vk_page
-        output = sources_vk.filter_vk_pages(api, known_input, filtering_rule)
+        output = sources_vk.filter_vk_pages(access_token, known_input, filtering_rule)
         self.assertEqual(output, expected_output)
 
 if __name__ == '__main__':
