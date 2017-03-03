@@ -62,6 +62,17 @@ def is_lifeless_vk_page(vk_api, page_id):
     return False
 
 
+def is_spam_vk_page(vk_api, page_id):
+    page = vk_api.groups.getById(group_id=page_id, fields='description')[0]
+    stop_words = ['курсов', 'помощь', 'на заказ']
+    for stop_word in stop_words:
+        if stop_word.lower() in page['name'].lower():
+            return True
+        if stop_word.lower() in page['description'].lower():
+            return True
+    return False
+
+
 def filter_vk_pages(vk_api, page_id_set, is_bad_page_id):
     good_vk_page_ids = set()
     for page_id in page_id_set:
@@ -70,6 +81,10 @@ def filter_vk_pages(vk_api, page_id_set, is_bad_page_id):
         good_vk_page_ids.add(page_id)
     return good_vk_page_ids
     
+
+def save_data(data, outfile):
+    json.dump(data, outfile)
+
 
 #FIXME: move get_striped_vk_posts to the appropriate module
 def form_vk_post_link(page_id, post_id):
@@ -100,4 +115,6 @@ if __name__ == '__main__':
     api = vk.API(session)
     pages = get_vk_public_page_list(api, search_queries)
     page_ids = get_vk_public_page_id_set(pages)
-    print(page_ids)
+    page_ids = filter_vk_pages(api, page_ids, is_lifeless_vk_page)
+    page_ids = filter_vk_pages(api, page_ids, is_spam_vk_page)
+    save_data(page_ids, outfile)

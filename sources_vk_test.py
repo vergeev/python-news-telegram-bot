@@ -68,6 +68,15 @@ class TestVkSources(unittest.TestCase):
         output = sources_vk.filter_vk_pages(api, known_input, filtering_rule)
         self.assertEqual(output, expected_output)
 
+    def test_filter_spam_vk_pages(self):
+        api = self.get_vk_api()
+        # one should check if the pages are still not banned and stuff 
+        # by visiting vk.com/club{id}
+        known_input = {30666517, 101965347, 35583485, 103174736}
+        expected_output = {30666517, 101965347}
+        filtering_rule = sources_vk.is_spam_vk_page
+        output = sources_vk.filter_vk_pages(api, known_input, filtering_rule)
+        self.assertEqual(output, expected_output)
 
 if __name__ == '__main__':
     unittest.main()
