@@ -6,6 +6,7 @@ import sys
 import json
 import vk
 
+
 def get_vk_public_page_list(access_token, search_queries, results_per_query=20):
     public_pages = []
     for query in search_queries:
@@ -76,22 +77,6 @@ def filter_vk_pages(access_token, page_id_set, is_bad_page_id):
 
 def save_data(data, outfile):
     json.dump(data, outfile)
-
-
-#FIXME: move get_striped_vk_posts to the appropriate module
-def form_vk_post_link(page_id, post_id):
-    return "https://vk.com/wall%d_%d" % (page_id, post_id)
-
-
-def strip_irrelevant_post_info(raw_post):
-    return {'date': raw_post['date'],
-            'text': raw_post['text'],
-            'link': form_vk_post_link(raw_post['from_id'], raw_post['id']),
-            }
-
-
-def get_stripped_vk_posts(post_list):
-    return [strip_irrelevant_post_info(post) for post in post_list]
 
 
 def get_access_token():
