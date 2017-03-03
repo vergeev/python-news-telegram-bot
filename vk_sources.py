@@ -49,7 +49,9 @@ def is_lifeless_vk_page(access_token, page_id):
 
 
 def get_group_by_id_with_description(access_token, group_id):
-    return vk.group_get_by_id(access_token, group_id=group_id, fields='description')[0]
+    group_get_by_id = vk.group_get_by_id
+    return vk.invoke_with_cooldown(group_get_by_id, access_token=access_token, 
+                                   group_id=group_id, fields='description')[0]
 
 
 def is_spam_vk_page(access_token, page_id):
@@ -114,8 +116,13 @@ if __name__ == '__main__':
         print_no_access_token_error()
         sys.exit()
     search_queries = ['программист', 'программирование', 'Python']
+    print('Getting the public pages...')
     pages = get_vk_public_page_list(access_token, search_queries)
     page_ids = get_vk_public_page_id_set(pages)
+    print('Filtering dead public pages...')
     page_ids = filter_vk_pages(access_token, page_ids, is_lifeless_vk_page)
+    print('Filtering spam public pages...')
     page_ids = filter_vk_pages(access_token, page_ids, is_spam_vk_page)
+    print('Saving page ids...')
     save_data(list(page_ids), args.outfile)
+    print('Done.')

@@ -27,7 +27,7 @@ def make_vk_api_request(method, **params):
 
 def invoke_with_cooldown(function, **kwargs):
     too_many_requests_error_code = 6
-    cooldown_seconds = 3
+    cooldown_seconds = 2
     try:
         return function(**kwargs)
     except VkRequestError as e:
