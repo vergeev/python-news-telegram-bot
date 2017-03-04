@@ -27,19 +27,6 @@ class TestVkPosts(unittest.TestCase):
             for field in relevant_fields:
                 self.assertNotEqual(post[field], None)
 
-    def test_persisting_existing_posts_while_saving(self):
-        filename = '_test_save_with_existing_posts.json'
-        existing_posts = {'1': 1, '2': 2}
-        vk_posts.save_with_existing_posts(existing_posts, filename)
-        new_posts = {'1': -1, '3': 3}
-        vk_posts.save_with_existing_posts(new_posts, filename)
-        with open(filename, 'r') as posts_file:
-            output = vk_posts.load_existing_posts(posts_file)
-            self.assertEqual(output['1'], -1)
-            self.assertEqual(output['2'], 2)
-            self.assertEqual(output['3'], 3)
-        remove(filename)
-
 
 if __name__ == '__main__':
     unittest.main()

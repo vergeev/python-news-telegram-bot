@@ -3,6 +3,24 @@ import sys
 import argparse
 from os import remove
 
+from database import PostDatabase
+
+def load_vk_source_ids_set(source_file):
+    return set(json.load(source_file))
+
+
+def get_vk_posts(source_vk_ids):
+    raise NotImplemented
+
+
+def is_python_post(post):
+    raise NotImplemented
+
+
+def filter_posts(post_list, is_good_post):
+    raise NotImplemented
+
+
 def form_vk_post_link(page_id, post_id):
     return "https://vk.com/wall%d_%d" % (page_id, post_id)
 
@@ -18,34 +36,23 @@ def strip_vk_posts(post_list):
     return [strip_irrelevant_post_info(post) for post in post_list]
 
 
-def load_source_ids_set(source_file):
-    return set(json.load(source_file))
-
-
-def load_existing_posts(posts_file):
-    raise NotImplemented
-
-
-def save_posts(posts, filename):
-    raise NotImplemented
-
-
-def save_with_existing_posts(posts, filename):
-    raise NotImplemented
+def store_to_database(post_list, database_name):
+    db = PostDatabase(database_name)
+    db.insert_post_list_uniquely(post_list)
 
 
 def get_argument_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument('-i', '--infile', type=argparse.FileType('r'), default=sys.stdin,
                         help='JSON file with vk source page ids')
-    parser.add_argument('-o', '--outfile', type=str, default='posts.json', 
-                        help='JSON file where posts will be stored')
+    parser.add_argument('-o', '--outfile', type=str, default='posts', 
+                        help='the name of database where posts will be stored')
 
 
 if __name__ == '__main__':
     args = get_argument_parser()
-    source_ids = load_source_ids_set(args.infile)
+    source_ids = load_vk_source_ids_set(args.infile)
     posts = get_vk_posts(source_ids)
     python_posts = filter_posts(posts, is_python_post)
     python_stripped_posts = strip_vk_posts(python_posts)
-    save_with_existing_posts(python_stripped_posts, args.outfile)
+    store_to_database(python_stripped_posts, args.outfile)
