@@ -41,13 +41,24 @@ def get_good_posts(post_list, is_good_post):
     return good_posts
 
 
+def extract_post_text_summary(post_text):
+    summary_length = 80
+    newline_position = post_text.find('<br>') 
+    if 0 <= newline_position <= summary_length:
+        return post_text[:newline_position]
+    last_whitespace_position = post_text.rfind(' ')
+    if 0 <= last_whitespace_position <= summary_length:
+        return '%s...' % post_text[:last_whitespace_position]
+    return '%s...' % post_text[:summary_length]
+
+
 def form_vk_post_link(page_id, post_id):
     return "https://vk.com/wall%d_%d" % (page_id, post_id)
 
 
 def strip_irrelevant_post_info(raw_post):
     return {'date': raw_post['date'],
-            'summary': raw_post['text'],  #FIXME: actually summarize the post
+            'summary': extract_post_text_summary(raw_post['text']),
             'link': form_vk_post_link(raw_post['from_id'], raw_post['id']),
             }
 
@@ -62,18 +73,23 @@ def store_to_database(post_list, database_name):
 
 
 def get_argument_parser():
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-i', '--infile', type=argparse.FileType('r'), default=stdin,
+    parser = ArgumentParser()
+    parser.add_argument('-i', '--infile', type=FileType('r'), default=stdin,
                         help='JSON file with vk source page ids')
     parser.add_argument('-o', '--outfile', type=str, default='posts', 
                         help='the name of database where posts will be stored')
+    return parser
 
 
 if __name__ == '__main__':
-    args = get_argument_parser()
+    args = get_argument_parser().parse_args()
     page_ids = load_vk_source_ids_set(args.infile)
     access_token = get_access_token()
+    print('Getting the news...')
     posts = get_last_vk_posts_of_communities(access_token, page_ids)
+    print('Filtering the news...')
     python_posts = get_good_posts(posts, is_python_post)
     python_stripped_posts = strip_vk_posts(python_posts)
+    print('Storing the news...')
     store_to_database(python_stripped_posts, args.outfile)
+    print('Done.')
