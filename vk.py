@@ -9,6 +9,10 @@ class VkRequestError(Exception):
         self.error_code = error_code
 
 
+def get_access_token():
+    return os.environ.get('VK_ACCESS_TOKEN')
+
+
 def raise_if_vk_error(json_response):
     if 'error' in json_response:
         error_code = json_response['error']['error_code']

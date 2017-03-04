@@ -7,7 +7,7 @@ import vk
 class TestVkSources(unittest.TestCase):
 
     def test_retrieve_public_pages_from_vk(self):
-        access_token = vk_sources.get_access_token()
+        access_token = vk.get_access_token()
         number_of_pages = 25
         search_queries = ['VK']
         output = vk_sources.get_vk_public_page_list(access_token, search_queries, 

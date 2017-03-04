@@ -90,7 +90,7 @@ def get_argument_parser():
 
 if __name__ == '__main__':
     args = get_argument_parser().parse_args()
-    access_token = get_access_token()
+    access_token = vk.get_access_token()
     if access_token is None:
         print_no_access_token_error()
         sys.exit()

@@ -2,13 +2,12 @@ import unittest
 from os import remove
 
 import vk_posts
-import vk_sources
-
+from vk import get_access_token
 
 class TestVkPosts(unittest.TestCase):
 
     def test_retrieve_vk_posts(self):
-        access_token = vk_sources.get_access_token()
+        access_token = get_access_token()
         number_of_posts = 5
         tproger_page_id = 30666517
         result = vk_posts.get_last_vk_community_posts(access_token, tproger_page_id, 
