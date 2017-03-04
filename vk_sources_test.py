@@ -1,5 +1,6 @@
 import vk_sources
 import unittest
+
 import vk
 
 
@@ -22,16 +23,6 @@ class TestVkSources(unittest.TestCase):
         expected_output = set([97616552, 104610799, 77157551])
         output = vk_sources.get_vk_public_page_id_set(known_input)
         self.assertEqual(output, expected_output)
-
-    def test_retrieve_vk_posts(self):
-        access_token = vk_sources.get_access_token()
-        number_of_posts = 5
-        tproger_page_id = 30666517
-        result = vk_sources.get_last_vk_community_posts(access_token, tproger_page_id, 
-                                                        count=number_of_posts)
-        self.assertEqual(len(result), number_of_posts)
-        for post in result:
-            self.assertIsInstance(post, dict)
 
     def test_filter_lifeless_vk_pages(self):
         access_token = vk_sources.get_access_token()

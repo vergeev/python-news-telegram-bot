@@ -4,7 +4,9 @@ import getpass
 import argparse
 import sys
 import json
+
 import vk
+from vk_posts import get_last_vk_community_posts
 
 
 def get_vk_public_page_list(access_token, search_queries, results_per_query=20):
@@ -17,14 +19,6 @@ def get_vk_public_page_list(access_token, search_queries, results_per_query=20):
 
 def get_vk_public_page_id_set(public_page_list):
     return {page['gid'] for page in public_page_list}
-
-
-def get_last_vk_community_posts(access_token, community_id, count=10):
-    owner_id = -1 * community_id  # indicate that this is a community
-    wall_get = vk.wall_get
-    post_list = vk.invoke_with_cooldown(wall_get, access_token=access_token, 
-                                        owner_id=owner_id, filter='owner', count=count)
-    return post_list
 
 
 def is_less_than_day(seconds):

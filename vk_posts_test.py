@@ -2,10 +2,20 @@ import unittest
 from os import remove
 
 import vk_posts
-
+import vk_sources
 
 
 class TestVkPosts(unittest.TestCase):
+
+    def test_retrieve_vk_posts(self):
+        access_token = vk_sources.get_access_token()
+        number_of_posts = 5
+        tproger_page_id = 30666517
+        result = vk_posts.get_last_vk_community_posts(access_token, tproger_page_id, 
+                                                      count=number_of_posts)
+        self.assertEqual(len(result), number_of_posts)
+        for post in result:
+            self.assertIsInstance(post, dict)
 
     def test_form_vk_post_link(self):
         page_id = -30666517
@@ -15,7 +25,7 @@ class TestVkPosts(unittest.TestCase):
         self.assertEqual(output, expected_output)
 
     def test_strip_vk_posts(self):
-        relevant_fields = ['date', 'text', 'link']
+        relevant_fields = ['date', 'summary', 'link']
         known_input = [{'date': 1, 'id': 1,
                         'text': 'qwe', 'from_id': 1},
                        {'irrelevant_field': 1, 'date': 1,
