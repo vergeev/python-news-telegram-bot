@@ -2,8 +2,11 @@ import logging
 import os
 import json
 from argparse import ArgumentParser, FileType
+from random import randint
 
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
+
+from database import PostDatabase
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     level=logging.INFO)
@@ -22,8 +25,15 @@ def display_help(bot, update):
     update.message.reply_text(message)
 
 
+def get_random_post(database):
+    random_id = randint(1, database.size())
+    return database.load_post_by_database_id(random_id)
+
+
 def display_random_python_post(bot, update):
-    raise NotImplemented
+    post = get_random_post(bot.database)
+    post_message = '%s\n\n%s' % (post['summary'], post['link'])
+    update.message.reply_text(post_message)
 
 
 def log_error(bot, update, error):
@@ -70,10 +80,12 @@ def get_argument_parser():
 if __name__ == '__main__':
     args = get_argument_parser().parse_args()
     token = get_telegram_bot_token()
-    bot = Updater(token)
+    updater = Updater(token)
+    updater.bot.database = PostDatabase(args.file_with_posts)
     if args.verbose:
-        bot.dispatcher.add_error_handler(log_error)
+        updater.dispatcher.add_error_handler(log_error)
     command_handlers = get_command_handlers()
-    bot.dispatcher = get_dispatcher_with_command_handlers(bot.dispatcher, command_handlers)
+    updater.dispatcher = get_dispatcher_with_command_handlers(updater.dispatcher,
+                                                              command_handlers)
     print('The bot is started, press Ctrl-C to stop.')
-    start_bot(bot)
+    start_bot(updater)
