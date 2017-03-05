@@ -5,7 +5,7 @@ from tinydb import TinyDB, where
 class PostDatabase:
 
     def __init__(self, filepath):
-        self.db = TinyDB('%s.json' % filepath) 
+        self.db = TinyDB(filepath) 
 
     def size(self):
         return len(self.db)
