@@ -10,6 +10,11 @@ class PostDatabase:
     def load_posts(self):
         return self.db.all()
     
+    def load_post_by_database_id(self, database_id):
+        if not (1 <= database_id <= len(self.db.all())):
+            raise ValueError('database_id is out of range: %d' % database_id)
+        return self.db.get(eid=database_id)
+
     def _raise_if_invalid_post(self, post):
         allowed_fields = ['date', 'summary', 'link']
         error_message = 'Only the following fields are allowed: %s' % str(allowed_fields)

@@ -13,7 +13,6 @@ class TestPostDatabase(unittest.TestCase):
         db.insert_post_uniquely(known_input)
         output = db.load_posts()
         self.assertEqual(output, expected_output)
-        db.erase_all_data()
         os.remove('%s.json' % db_name)
 
     def test_inserting_post_with_missing_field(self):
@@ -22,7 +21,6 @@ class TestPostDatabase(unittest.TestCase):
         known_input = {'summary': 'qweqwe', 'link': 'qweqwe'}
         with self.assertRaises(ValueError):
             db.insert_post_uniquely(known_input)
-        db.erase_all_data()
         os.remove('%s.json' % db_name)
 
     def test_inserting_post_with_unnecessary_field(self):
@@ -31,7 +29,6 @@ class TestPostDatabase(unittest.TestCase):
         known_input = {'text': 'asd', 'date': 1, 'summary': 'qweqwe', 'link': 'qweqwe'}
         with self.assertRaises(ValueError):
             db.insert_post_uniquely(known_input)
-        db.erase_all_data()
         os.remove('%s.json' % db_name)
 
     def test_insert_uniquely_dublicate_posts(self):
@@ -46,7 +43,6 @@ class TestPostDatabase(unittest.TestCase):
         db.insert_post_uniquely(post3)
         output = db.load_posts()
         self.assertEqual(output, expected_output)
-        db.erase_all_data()
         os.remove('%s.json' % db_name)
 
     def test_insert_multiple_posts(self):
@@ -61,7 +57,18 @@ class TestPostDatabase(unittest.TestCase):
         self.assertEqual(len(output), len(posts))
         for post in posts:
             self.assertTrue(post in output)
-        db.erase_all_data()
+        os.remove('%s.json' % db_name)
+
+    def test_load_first_post_by_id(self):
+        db_name = '_test_post_db6'
+        db = database.PostDatabase(db_name)
+        posts = [{'date': 1, 'summary': 'qweqwe', 'link': 'post1'},
+                 {'date': 2, 'summary': 'qweqwe', 'link': 'post2'},
+                 {'date': 1, 'summary': 'qwe', 'link': 'post3'},
+                 ]
+        db.insert_post_list_uniquely(posts)
+        output = db.load_post_by_database_id(1)
+        self.assertTrue(output == posts[0] or output == posts[1] or output == posts[2])
         os.remove('%s.json' % db_name)
 
 
