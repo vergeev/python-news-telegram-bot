@@ -7,6 +7,9 @@ class PostDatabase:
     def __init__(self, filepath):
         self.db = TinyDB('%s.json' % filepath) 
 
+    def size(self):
+        return len(self.db)
+
     def load_posts(self):
         return self.db.all()
     

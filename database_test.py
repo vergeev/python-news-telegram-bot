@@ -71,6 +71,17 @@ class TestPostDatabase(unittest.TestCase):
         self.assertTrue(output == posts[0] or output == posts[1] or output == posts[2])
         os.remove('%s.json' % db_name)
 
+    def test_getting_size(self):
+        db_name = '_test_post_db7'
+        db = database.PostDatabase(db_name)
+        self.assertEqual(0, db.size())
+        posts = [{'date': 1, 'summary': 'qweqwe', 'link': 'post1'},
+                 {'date': 2, 'summary': 'qweqwe', 'link': 'post2'},
+                 {'date': 1, 'summary': 'qwe', 'link': 'post3'},
+                 ]
+        db.insert_post_list_uniquely(posts)
+        self.assertEqual(3, db.size())
+        os.remove('%s.json' % db_name)
 
 if __name__ == '__main__':
     unittest.main()
