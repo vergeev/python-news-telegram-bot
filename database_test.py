@@ -1,36 +1,42 @@
 import unittest
+import os
 
 import database
 
 class TestPostDatabase(unittest.TestCase):
-    # Note that database files are not getting deleted, but
-    #   since they have similar names, it's not hard to do by hand.
 
     def test_inserting_and_loading_of_single_valid_post(self):
-        db = database.PostDatabase('_test_post_db1')
+        db_name = '_test_post_db1'
+        db = database.PostDatabase(db_name)
         known_input = {'date': 1, 'summary': 'qweqwe', 'link': 'qweqwe'}
         expected_output = [known_input]
         db.insert_post_uniquely(known_input)
         output = db.load_posts()
         self.assertEqual(output, expected_output)
         db.erase_all_data()
+        os.remove('%s.json' % db_name)
 
     def test_inserting_post_with_missing_field(self):
-        db = database.PostDatabase('_test_post_db2')
+        db_name = '_test_post_db2'
+        db = database.PostDatabase(db_name)
         known_input = {'summary': 'qweqwe', 'link': 'qweqwe'}
         with self.assertRaises(ValueError):
             db.insert_post_uniquely(known_input)
         db.erase_all_data()
+        os.remove('%s.json' % db_name)
 
     def test_inserting_post_with_unnecessary_field(self):
-        db = database.PostDatabase('_test_post_db3')
+        db_name = '_test_post_db3'
+        db = database.PostDatabase(db_name)
         known_input = {'text': 'asd', 'date': 1, 'summary': 'qweqwe', 'link': 'qweqwe'}
         with self.assertRaises(ValueError):
             db.insert_post_uniquely(known_input)
         db.erase_all_data()
+        os.remove('%s.json' % db_name)
 
     def test_insert_uniquely_dublicate_posts(self):
-        db = database.PostDatabase('_test_post_db4')
+        db_name = '_test_post_db4'
+        db = database.PostDatabase(db_name)
         post1 = {'date': 1, 'summary': 'qweqwe', 'link': 'post1'}
         post2 = {'date': 2, 'summary': 'qweqwe', 'link': 'post1'}
         post3 = {'date': 1, 'summary': 'qwe', 'link': 'post1'}
@@ -41,10 +47,11 @@ class TestPostDatabase(unittest.TestCase):
         output = db.load_posts()
         self.assertEqual(output, expected_output)
         db.erase_all_data()
-
+        os.remove('%s.json' % db_name)
 
     def test_insert_multiple_posts(self):
-        db = database.PostDatabase('_test_post_db5')
+        db_name = '_test_post_db5'
+        db = database.PostDatabase(db_name)
         posts = [{'date': 1, 'summary': 'qweqwe', 'link': 'post1'},
                  {'date': 2, 'summary': 'qweqwe', 'link': 'post2'},
                  {'date': 1, 'summary': 'qwe', 'link': 'post3'},
@@ -55,6 +62,7 @@ class TestPostDatabase(unittest.TestCase):
         for post in posts:
             self.assertTrue(post in output)
         db.erase_all_data()
+        os.remove('%s.json' % db_name)
 
 
 if __name__ == '__main__':
