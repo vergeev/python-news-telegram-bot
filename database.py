@@ -39,6 +39,3 @@ class PostDatabase:
     def insert_post_list_uniquely(self, posts):
         for post in posts:
             self.insert_post_uniquely(post)
-
-    def erase_all_data(self):
-        self.db.purge()
