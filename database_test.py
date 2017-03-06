@@ -13,7 +13,7 @@ class TestPostDatabase(unittest.TestCase):
         db.insert_post_uniquely(known_input)
         output = db.load_posts()
         self.assertEqual(output, expected_output)
-        os.remove('%s.json' % db_name)
+        os.remove(db_name)
 
     def test_inserting_post_with_missing_field(self):
         db_name = '_test_post_db2'
@@ -21,7 +21,7 @@ class TestPostDatabase(unittest.TestCase):
         known_input = {'summary': 'qweqwe', 'link': 'qweqwe'}
         with self.assertRaises(ValueError):
             db.insert_post_uniquely(known_input)
-        os.remove('%s.json' % db_name)
+        os.remove(db_name)
 
     def test_inserting_post_with_unnecessary_field(self):
         db_name = '_test_post_db3'
@@ -29,7 +29,7 @@ class TestPostDatabase(unittest.TestCase):
         known_input = {'text': 'asd', 'date': 1, 'summary': 'qweqwe', 'link': 'qweqwe'}
         with self.assertRaises(ValueError):
             db.insert_post_uniquely(known_input)
-        os.remove('%s.json' % db_name)
+        os.remove(db_name)
 
     def test_insert_uniquely_dublicate_posts(self):
         db_name = '_test_post_db4'
@@ -43,7 +43,7 @@ class TestPostDatabase(unittest.TestCase):
         db.insert_post_uniquely(post3)
         output = db.load_posts()
         self.assertEqual(output, expected_output)
-        os.remove('%s.json' % db_name)
+        os.remove(db_name)
 
     def test_insert_multiple_posts(self):
         db_name = '_test_post_db5'
@@ -57,7 +57,7 @@ class TestPostDatabase(unittest.TestCase):
         self.assertEqual(len(output), len(posts))
         for post in posts:
             self.assertTrue(post in output)
-        os.remove('%s.json' % db_name)
+        os.remove(db_name)
 
     def test_load_first_post_by_id(self):
         db_name = '_test_post_db6'
@@ -69,7 +69,7 @@ class TestPostDatabase(unittest.TestCase):
         db.insert_post_list_uniquely(posts)
         output = db.load_post_by_database_id(1)
         self.assertTrue(output == posts[0] or output == posts[1] or output == posts[2])
-        os.remove('%s.json' % db_name)
+        os.remove(db_name)
 
     def test_getting_size(self):
         db_name = '_test_post_db7'
@@ -81,7 +81,7 @@ class TestPostDatabase(unittest.TestCase):
                  ]
         db.insert_post_list_uniquely(posts)
         self.assertEqual(3, db.size())
-        os.remove('%s.json' % db_name)
+        os.remove(db_name)
 
 if __name__ == '__main__':
     unittest.main()
