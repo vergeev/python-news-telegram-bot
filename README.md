@@ -1,6 +1,6 @@
 # PythonNewsTelegramBot
 The bot grabs a bunch of recent posts from [VK.com](vk.com) communities mentioning Python and some related frameworks. It then sends a random one of them in reply to ```/python_news``` command.
-### Installation
+## Installation
 Get the sources and follow the instructions in the guide:
 
 1. ```$ git clone https://github.com/patrnk/PythonNewsTelegramBot```
@@ -14,7 +14,7 @@ There are some things you'll need to get during the installation:
 - ```TELEGRAM_BOT_TOKEN``` (to interact with the user)
 
 The ```installation_guide.py``` will help you with getting them.
-### Usage
+## Usage
 The general workflow goes as follows.
 
 1. Create a list of communitites we will get news from:
@@ -33,8 +33,7 @@ The general workflow goes as follows.
   $ python3 bot.py posts.json
   ```
 
-***
-### Project Goals
+## Project Goals
 - [Complete the assignment for styleru_py course](https://github.com/patrnk/styleru_py-notes).
 - Start getting used to writing tests simultaneously with writing code.
 - Get acquainted with [VK API](https://vk.com/dev) and [python-telegram-bot](https://python-telegram-bot.org/) module.
