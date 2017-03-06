@@ -5,7 +5,7 @@ Get the sources and follow the instructions in the guide:
 
 1. ```git clone https://github.com/patrnk/PythonNewsTelegramBot```
 2. ```cd PythonNewsTelegramBot```
-3. ```pip3 -r requierements.txt```
+3. ```pip3 install -r requierements.txt```
 4. ```python3 installation_guide.py```
 
 There are some things you'll need to get during the installation:
