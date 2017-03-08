@@ -1,3 +1,6 @@
+certifi==2017.1.23
+future==0.16.0
+python-telegram-bot==5.3.0
 requests==2.13.0
 tinydb==3.2.2
-python-telegram-bot==5.3.0
+urllib3==1.20
