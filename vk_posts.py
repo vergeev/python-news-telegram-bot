@@ -42,12 +42,14 @@ def get_good_posts(post_list, is_good_post):
 
 
 def extract_post_text_summary(post_text):
-    summary_length = 80
-    newline_position = post_text.find('<br>') 
-    if 0 <= newline_position <= summary_length:
-        return post_text[:newline_position]
-    last_whitespace_position = post_text.rfind(' ')
-    if 0 <= last_whitespace_position <= summary_length:
+    summary_length = 100
+    if len(post_text) < summary_length:
+        return post_text
+    first_newline_position = post_text[:summary_length].find('<br>') 
+    if first_newline_position != -1:
+        return post_text[:first_newline_position]
+    last_whitespace_position = post_text[:summary_length].rfind(' ')
+    if last_whitespace_position != -1:
         return '%s...' % post_text[:last_whitespace_position]
     return '%s...' % post_text[:summary_length]
 

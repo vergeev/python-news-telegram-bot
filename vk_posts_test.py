@@ -61,6 +61,32 @@ class TestVkPosts(unittest.TestCase):
             for field in relevant_fields:
                 self.assertNotEqual(post[field], None)
 
+    def test_extract_post_text_summary_too_long_summary(self):
+        known_input = ''.join(['1' for i in range(230)])
+        expected_output = '%s...' % ''.join(['1' for i in range(100)])
+        actual_output = vk_posts.extract_post_text_summary(known_input)
+        self.assertEqual(actual_output, expected_output)
+
+    def test_extract_post_text_summary_newline_break(self):
+        long_string = ''.join(['1' for i in range(230)])
+        known_input = '%s<br>%s' % (long_string[:63], long_string[63:])
+        expected_output = ''.join(['1' for i in range(63)])
+        actual_output = vk_posts.extract_post_text_summary(known_input)
+        self.assertEqual(actual_output, expected_output)
+
+    def test_extract_post_text_summary_space_break(self):
+        long_string = ''.join(['1' for i in range(230)])
+        known_input = '%s %s' % (long_string[:84], long_string[84:])
+        expected_output = '%s...' % ''.join(['1' for i in range(84)])
+        actual_output = vk_posts.extract_post_text_summary(known_input)
+        self.assertEqual(actual_output, expected_output)
+
+    def test_extract_post_text_summary_too_short_post_text(self):
+        known_input = ''.join(['1' for i in range(5)])
+        expected_output = known_input
+        actual_output = vk_posts.extract_post_text_summary(known_input)
+        self.assertEqual(actual_output, expected_output)
+
 
 if __name__ == '__main__':
     unittest.main()
