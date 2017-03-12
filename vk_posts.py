@@ -5,7 +5,7 @@ from sys import stdin
 from argparse import ArgumentParser, FileType
 
 from database import PostDatabase
-from vk import wall_get, invoke_with_cooldown, get_access_token
+from vk_api import wall_get, invoke_with_cooldown, get_access_token
 
 
 def get_last_vk_community_posts(access_token, community_id, count=10):

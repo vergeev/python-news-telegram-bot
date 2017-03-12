@@ -1,17 +1,17 @@
-import vk_sources
 import unittest
 
-import vk
+import vk_sources
+import vk_api
 
 
 class TestVkSources(unittest.TestCase):
 
     def test_retrieve_public_pages_from_vk(self):
-        access_token = vk.get_access_token()
+        access_token = vk_api.get_access_token()
         number_of_pages = 25
         search_queries = ['VK']
         output = vk_sources.get_vk_public_page_list(access_token, search_queries, 
-                                                        results_per_query=number_of_pages)
+                                                    results_per_query=number_of_pages)
         self.assertEqual(len(output), number_of_pages)
         for public_page in output:
             self.assertIsInstance(public_page, dict)

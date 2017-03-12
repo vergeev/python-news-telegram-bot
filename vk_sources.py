@@ -5,15 +5,15 @@ import argparse
 import sys
 import json
 
-import vk
+import vk_api
 from vk_posts import get_last_vk_community_posts
 
 
 def get_vk_public_page_list(access_token, search_queries, results_per_query=20):
     public_pages = []
     for query in search_queries:
-        public_pages += vk.groups_search(access_token, query=query, type='page', 
-                                         count=results_per_query)
+        public_pages += vk_api.groups_search(access_token, query=query, type='page', 
+                                             count=results_per_query)
     return public_pages
 
 
@@ -40,9 +40,9 @@ def is_vk_page_alive(access_token, page_id):
 
 
 def get_group_by_id_with_description(access_token, group_id):
-    group_get_by_id = vk.group_get_by_id
-    return vk.invoke_with_cooldown(group_get_by_id, access_token=access_token, 
-                                   group_id=group_id, fields='description')[0]
+    group_get_by_id = vk_api.group_get_by_id
+    return vk_api.invoke_with_cooldown(group_get_by_id, access_token=access_token, 
+                                       group_id=group_id, fields='description')[0]
 
 
 def is_vk_page_not_spam(access_token, page_id):
@@ -81,7 +81,7 @@ def get_argument_parser():
 
 if __name__ == '__main__':
     args = get_argument_parser().parse_args()
-    access_token = vk.get_access_token()
+    access_token = vk_api.get_access_token()
     if access_token is None:
         print_no_access_token_error()
         sys.exit()

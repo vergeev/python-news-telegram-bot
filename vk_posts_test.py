@@ -2,7 +2,7 @@ import unittest
 from os import remove
 
 import vk_posts
-from vk import get_access_token
+from vk_api import get_access_token
 
 class TestVkPosts(unittest.TestCase):
 
