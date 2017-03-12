@@ -31,6 +31,21 @@ def is_python_post(post):
     return False
 
 
+def is_not_suggested_post(post):
+    return 'signer_id' not in post
+
+
+def is_not_ads_post(post):
+    return not post['marked_as_ads']
+
+
+def filter_raw_python_posts(raw_posts):
+    almost_filtered_posts = list(filter(is_python_post, raw_posts))
+    almost_filtered_posts = list(filter(is_not_suggested_post, almost_filtered_posts))
+    filtered_posts = list(filter(is_not_ads_post, almost_filtered_posts))
+    return filtered_posts
+
+
 def extract_post_text_summary(post_text):
     summary_length = 100
 
@@ -84,9 +99,8 @@ if __name__ == '__main__':
     print('Getting the news...')
     posts = get_last_vk_posts_of_communities(access_token, page_ids)
     print('Filtering the news...')
-    python_posts = list(filter(is_python_post, posts))
-    python_not_suggested_posts = list(filter(lambda p: 'signer_id' not in p, python_posts))
-    python_stripped_not_suggested_posts = strip_vk_posts(python_not_suggested_posts) 
+    filtered_posts = filter_raw_python_posts(posts)
+    stripped_filtered_posts = strip_vk_posts(filtered_posts) 
     print('Storing the news...')
-    store_to_database(python_stripped_not_suggested_posts, args.outfile)
+    store_to_database(stripped_filtered_posts, args.outfile)
     print('Done.')
