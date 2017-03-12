@@ -14,14 +14,7 @@ logger = logging.getLogger(__name__)
 
 
 def display_welcome_message(bot, update):
-    message = 'Welcome 🙌\n'\
-              'Type in /help for a list of commands.'
-    update.message.reply_text(message)
-
-
-def display_help(bot, update):
-    message = 'List of commands:\n'\
-              '/python_news -- get relatively new post mentioning Python'
+    message = 'Чтобы получить новость про Питон, напишите /python_news.'
     update.message.reply_text(message)
 
 
@@ -51,7 +44,6 @@ def get_telegram_bot_token():
 def get_command_handlers():
     command_handlers = {
                         'start': display_welcome_message,
-                        'help': display_help,
                         'python_news': display_random_python_post,
                         }
     return command_handlers
