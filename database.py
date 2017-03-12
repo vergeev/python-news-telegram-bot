@@ -1,11 +1,10 @@
-from os import remove
+import tinydb
 
-from tinydb import TinyDB, where
 
 class PostDatabase:
 
     def __init__(self, filepath):
-        self.db = TinyDB(filepath) 
+        self.db = tinydb.TinyDB(filepath) 
 
     def size(self):
         return len(self.db)
@@ -28,7 +27,7 @@ class PostDatabase:
             raise ValueError(error_message)
 
     def _is_dublicate(self, post):
-        return self.db.contains(where('link') == post['link'])
+        return self.db.contains(tinydb.where('link') == post['link'])
 
     def insert_post_uniquely(self, post):
         self._raise_if_invalid_post(post)
