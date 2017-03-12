@@ -22,7 +22,7 @@ class TestVkSources(unittest.TestCase):
         # by visiting vk.com/club{id}
         known_input = [30666517, 101965347, 104116333]
         expected_output = [30666517, 101965347]
-        filtering_rule = vk_sources.is_lifeless_vk_page
+        filtering_rule = vk_sources.is_vk_page_alive
         output = vk_sources.filter_vk_pages(access_token, known_input, filtering_rule)
         self.assertEqual(output, expected_output)
 
@@ -32,7 +32,7 @@ class TestVkSources(unittest.TestCase):
         # by visiting vk.com/club{id}
         known_input = [30666517, 101965347, 35583485, 103174736]
         expected_output = [30666517, 101965347]
-        filtering_rule = vk_sources.is_spam_vk_page
+        filtering_rule = vk_sources.is_vk_page_not_spam
         output = vk_sources.filter_vk_pages(access_token, known_input, filtering_rule)
         self.assertEqual(output, expected_output)
 

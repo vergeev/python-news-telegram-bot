@@ -25,18 +25,18 @@ def select_latest_post(vk_post_list):
     return max(vk_post_list, key=lambda p: p['date'])
 
 
-def is_lifeless_vk_page(access_token, page_id):
+def is_vk_page_alive(access_token, page_id):
     number_of_posts_to_test = 5
     posts = get_last_vk_community_posts(access_token, page_id, 
                                         count=number_of_posts_to_test)
     latest_post_time_difference = time.time() - select_latest_post(posts)['date']
     if not is_less_than_day(latest_post_time_difference):
-        return True
+        return False
     for index, post in enumerate(posts[2:]):
         time_difference = posts[index - 1]['date'] - post['date']
         if not is_less_than_day(time_difference):
-            return True
-    return False
+            return False
+    return True
 
 
 def get_group_by_id_with_description(access_token, group_id):
@@ -45,26 +45,20 @@ def get_group_by_id_with_description(access_token, group_id):
                                    group_id=group_id, fields='description')[0]
 
 
-def is_spam_vk_page(access_token, page_id):
+def is_vk_page_not_spam(access_token, page_id):
     page = get_group_by_id_with_description(access_token, page_id)
     stop_words = ['курсов', 'помощь', 'на заказ']
     for stop_word in stop_words:
         if stop_word.lower() in page['name'].lower():
-            return True
+            return False
         if stop_word.lower() in page['description'].lower():
-            return True
-    return False
+            return False
+    return True
 
 
 def filter_vk_pages(access_token, page_id_list, is_bad_page_id):
-    #return list(filter(lambda page: is_bad_page_id(access_token, page), page_id_list))
-    good_vk_page_ids = list()
-    for page_id in page_id_list:
-        if is_bad_page_id(access_token, page_id):
-            continue
-        good_vk_page_ids.append(page_id)
-    return good_vk_page_ids
-    
+    return list(filter(lambda page: is_bad_page_id(access_token, page), page_id_list))
+
 
 def save_data(data, outfile):
     json.dump(data, outfile)
@@ -93,12 +87,12 @@ if __name__ == '__main__':
         sys.exit()
     search_queries = ['программист', 'программирование', 'Python']
     print('Getting the public pages...')
-    pages = get_vk_public_page_ids_list(access_token, search_queries)
+    pages = get_vk_public_page_list(access_token, search_queries)
     page_ids = [page['gid'] for page in pages]
     print('Filtering dead public pages...')
-    page_ids = filter_vk_pages(access_token, page_ids, is_lifeless_vk_page)
+    page_ids = filter_vk_pages(access_token, page_ids, is_vk_page_alive)
     print('Filtering spam public pages...')
-    page_ids = filter_vk_pages(access_token, page_ids, is_spam_vk_page)
+    page_ids = filter_vk_pages(access_token, page_ids, is_vk_page_not_spam)
     print('Saving page ids...')
     save_data(list(page_ids), args.outfile)
     print('Done.')
