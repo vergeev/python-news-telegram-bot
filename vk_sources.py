@@ -68,11 +68,6 @@ def get_access_token():
     return os.environ.get('VK_ACCESS_TOKEN')
 
 
-def print_no_access_token_error():
-    print('No access token in VK_ACCESS_TOKEN environment variable.')
-    print('Please run installation_guide.py.')
-
-
 def get_argument_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument('-o', '--outfile', type=argparse.FileType('w'), default=sys.stdout)
@@ -83,7 +78,7 @@ if __name__ == '__main__':
     args = get_argument_parser().parse_args()
     access_token = vk_api.get_access_token()
     if access_token is None:
-        print_no_access_token_error()
+        print('No access token. Try running installation_guide.py.')
         sys.exit()
     search_queries = ['программист', 'программирование', 'Python']
     print('Getting the public pages...')

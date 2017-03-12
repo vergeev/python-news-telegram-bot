@@ -8,6 +8,7 @@ import telegram.ext
 
 import database
 
+
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -34,11 +35,7 @@ def log_error(bot, update, error):
 
 
 def get_telegram_bot_token():
-    token = os.environ.get('TELEGRAM_BOT_TOKEN')
-    if token == None:
-        raise ValueError('Please put bot\'s token to TELEGRAM_BOT_TOKEN ' 
-                         'environmental variable')
-    return token
+    return os.environ.get('TELEGRAM_BOT_TOKEN')
 
 
 def get_command_handlers():
@@ -72,6 +69,9 @@ def get_argument_parser():
 if __name__ == '__main__':
     args = get_argument_parser().parse_args()
     token = get_telegram_bot_token()
+    if token is None:
+        print('No bot token. Try running installation_guide.py.')
+        sys.exit()
     updater = telegram.ext.Updater(token)
     updater.bot.database = database.PostDatabase(args.file_with_posts)
     if args.verbose:

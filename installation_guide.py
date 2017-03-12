@@ -3,6 +3,9 @@ import sys
 
 import requests
 
+import vk_api
+import bot
+
 
 def is_vk_api_app_id_known():
     return os.environ.get('VK_API_APP_ID') is not None
@@ -14,11 +17,11 @@ def ask_user_for_vk_api_app_id():
 
 
 def is_vk_access_token_known():
-    return os.environ.get('VK_ACCESS_TOKEN') is not None
+    return vk_api.get_access_token() is not None
 
 
 def form_vk_user_authorization_url():
-    params = {'client_id': environ['VK_API_APP_ID'],
+    params = {'client_id': os.environ['VK_API_APP_ID'],
               'scope': 'offline',
               'redirect_uri': 'https://oauth.vk.com/blank.html',
               'display': 'page',
@@ -39,7 +42,7 @@ def ask_user_for_vk_access_token():
 
 
 def is_telegram_bot_token_known():
-    return os.environ.get('TELEGRAM_BOT_TOKEN') is not None
+    return bot.get_telegram_bot_token() is not None
 
 
 def ask_user_for_telegram_bot_token():
