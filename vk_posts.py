@@ -7,10 +7,6 @@ from database import PostDatabase
 from vk import wall_get, invoke_with_cooldown, get_access_token
 
 
-def load_vk_source_ids_set(source_file):
-    return set(json.load(source_file))
-
-
 def get_last_vk_community_posts(access_token, community_id, count=10):
     owner_id = -1 * community_id  # indicate that this is a community
     post_list = invoke_with_cooldown(wall_get, access_token=access_token, 
@@ -82,7 +78,7 @@ def get_argument_parser():
 
 if __name__ == '__main__':
     args = get_argument_parser().parse_args()
-    page_ids = load_vk_source_ids_set(args.infile)
+    page_ids = json.load(args.infile)
     access_token = get_access_token()
     print('Getting the news...')
     posts = get_last_vk_posts_of_communities(access_token, page_ids)
