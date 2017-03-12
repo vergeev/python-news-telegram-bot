@@ -17,10 +17,6 @@ def get_vk_public_page_list(access_token, search_queries, results_per_query=20):
     return public_pages
 
 
-def get_vk_public_page_id_set(public_page_list):
-    return {page['gid'] for page in public_page_list}
-
-
 def is_less_than_day(seconds):
     return seconds < 24 * 60 * 60
 
@@ -60,12 +56,13 @@ def is_spam_vk_page(access_token, page_id):
     return False
 
 
-def filter_vk_pages(access_token, page_id_set, is_bad_page_id):
-    good_vk_page_ids = set()
-    for page_id in page_id_set:
+def filter_vk_pages(access_token, page_id_list, is_bad_page_id):
+    #return list(filter(lambda page: is_bad_page_id(access_token, page), page_id_list))
+    good_vk_page_ids = list()
+    for page_id in page_id_list:
         if is_bad_page_id(access_token, page_id):
             continue
-        good_vk_page_ids.add(page_id)
+        good_vk_page_ids.append(page_id)
     return good_vk_page_ids
     
 
@@ -79,7 +76,7 @@ def get_access_token():
 
 def print_no_access_token_error():
     print('No access token in VK_ACCESS_TOKEN environment variable.')
-    print('Please see README.md on how to get it.')
+    print('Please see README.md on how to get it.')  # FIXME: reference installation_guide
 
 
 def get_argument_parser():
@@ -96,8 +93,8 @@ if __name__ == '__main__':
         sys.exit()
     search_queries = ['программист', 'программирование', 'Python']
     print('Getting the public pages...')
-    pages = get_vk_public_page_list(access_token, search_queries)
-    page_ids = get_vk_public_page_id_set(pages)
+    pages = get_vk_public_page_ids_list(access_token, search_queries)
+    page_ids = [page['gid'] for page in pages]
     print('Filtering dead public pages...')
     page_ids = filter_vk_pages(access_token, page_ids, is_lifeless_vk_page)
     print('Filtering spam public pages...')
