@@ -4,9 +4,14 @@ import getpass
 import argparse
 import sys
 import json
+import logging
 
 import vk_api
 import vk_posts
+
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 
 def get_vk_public_page_list(access_token, search_queries, results_per_query=20):
@@ -82,13 +87,13 @@ if __name__ == '__main__':
         print('No access token. Try running installation_guide.py.')
         sys.exit()
     search_queries = ['программист', 'программирование', 'Python']
-    print('Getting the public pages...')
+    logger.info('Getting the public pages...')
     pages = get_vk_public_page_list(access_token, search_queries)
     page_ids = [page['gid'] for page in pages]
-    print('Filtering dead public pages...')
+    logger.info('Filtering dead public pages...')
     page_ids = filter_vk_pages(access_token, page_ids, is_vk_page_alive)
-    print('Filtering spam public pages...')
+    logger.info('Filtering spam public pages...')
     page_ids = filter_vk_pages(access_token, page_ids, is_vk_page_not_spam)
-    print('Saving page ids...')
+    logger.info('Saving page ids...')
     save_data(list(page_ids), args.outfile)
-    print('Done.')
+    logger.info('Done saving sources.')

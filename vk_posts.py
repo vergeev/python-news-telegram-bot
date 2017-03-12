@@ -3,10 +3,15 @@ import os
 import html
 import sys
 import argparse
+import logging
 
 import tinydb
 
 import vk_api
+
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 
 def get_last_vk_community_posts(access_token, community_id, count=10):
@@ -107,12 +112,12 @@ if __name__ == '__main__':
     if access_token is None:
         print('No access token was received. Try running installation_guide.py.')
         sys.exit()
-    print('Getting the news...')
+    logger.info('Getting the news...')
     posts = get_last_vk_posts_of_communities(access_token, page_ids)
-    print('Filtering the news...')
+    logger.info('Filtering the news...')
     filtered_posts = filter_raw_python_posts(posts)
     stripped_filtered_posts = strip_vk_posts(filtered_posts) 
-    print('Storing the news...')
+    logger.info('Storing the news...')
     database = tinydb.TinyDB(args.outfile)
     store_posts_to_database(stripped_filtered_posts, database)
-    print('Done.')
+    logger.info('Done saving posts.')
