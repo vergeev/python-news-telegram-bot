@@ -5,8 +5,7 @@ import argparse
 import random
 
 import telegram.ext
-
-import database
+import tinydb
 
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -20,8 +19,8 @@ def display_welcome_message(bot, update):
 
 
 def get_random_post(database):
-    random_id = random.randint(1, database.size())
-    return database.load_post_by_database_id(random_id)
+    random_id = random.randint(1, len(database))
+    return database.get(eid=random_id)
 
 
 def display_random_python_post(bot, update):
@@ -73,7 +72,7 @@ if __name__ == '__main__':
         print('No bot token. Try running installation_guide.py.')
         sys.exit()
     updater = telegram.ext.Updater(token)
-    updater.bot.database = database.PostDatabase(args.file_with_posts)
+    updater.bot.database = tinydb.TinyDB(args.file_with_posts)
     if args.verbose:
         updater.dispatcher.add_error_handler(log_error)
     command_handlers = get_command_handlers()
