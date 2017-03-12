@@ -70,7 +70,8 @@ def get_access_token():
 
 def get_argument_parser():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-o', '--outfile', type=argparse.FileType('w'), default=sys.stdout)
+    parser.add_argument('-o', '--outfile', type=argparse.FileType('w'), 
+                        default='sources.json')
     return parser
 
 

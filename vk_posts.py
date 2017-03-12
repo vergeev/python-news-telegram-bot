@@ -92,7 +92,8 @@ def store_posts_to_database(posts, database):
 
 def get_argument_parser():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-i', '--infile', type=argparse.FileType('r'), default=sys.stdin,
+    parser.add_argument('-i', '--infile', type=argparse.FileType('r'), 
+                        default='sources.json',
                         help='JSON file with vk source page ids')
     parser.add_argument('-o', '--outfile', type=str, default='posts.json', 
                         help='the name of database where posts will be stored')
