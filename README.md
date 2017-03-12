@@ -46,8 +46,9 @@ $ nosetests -v --with-coverage
 ## Project Goals
 - Complete the assignment for [styleru_py course](http://melevir.com/things/python_styleru/).
 - Start getting used to writing tests simultaneously with writing code.
-- Get acquainted with 
-  - [VK API](https://vk.com/dev), 
-  - [python-telegram-bot](https://python-telegram-bot.org/) module,
-  - [venv](https://docs.python.org/3/library/venv.html),
-  - GitHub Issues.
+- Notice and prevent premature optimization.
+- [VK API](https://vk.com/dev)
+- [python-telegram-bot](https://python-telegram-bot.org/)
+- [venv](https://docs.python.org/3/library/venv.html)
+- GitHub Issues
+- basic logging
