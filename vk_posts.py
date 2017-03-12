@@ -71,7 +71,7 @@ def get_argument_parser():
     parser = ArgumentParser()
     parser.add_argument('-i', '--infile', type=FileType('r'), default=stdin,
                         help='JSON file with vk source page ids')
-    parser.add_argument('-o', '--outfile', type=str, default='posts', 
+    parser.add_argument('-o', '--outfile', type=str, default='posts.json', 
                         help='the name of database where posts will be stored')
     return parser
 
@@ -84,7 +84,8 @@ if __name__ == '__main__':
     posts = get_last_vk_posts_of_communities(access_token, page_ids)
     print('Filtering the news...')
     python_posts = list(filter(is_python_post, posts))
-    python_stripped_posts = strip_vk_posts(python_posts)
+    python_not_suggested_posts = list(filter(lambda p: 'signer_id' not in p, python_posts))
+    python_stripped_not_suggested_posts = strip_vk_posts(python_not_suggested_posts) 
     print('Storing the news...')
-    store_to_database(python_stripped_posts, args.outfile)
+    store_to_database(python_stripped_not_suggested_posts, args.outfile)
     print('Done.')
