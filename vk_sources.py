@@ -84,7 +84,7 @@ if __name__ == '__main__':
     args = get_argument_parser().parse_args()
     access_token = vk_api.get_access_token()
     if access_token is None:
-        print('No access token. Try running installation_guide.py.')
+        sys.stderr.write('No access token was found. Try running installation_guide.py.\n')
         sys.exit()
     search_queries = ['программист', 'программирование', 'Python']
     logger.info('Getting the public pages...')

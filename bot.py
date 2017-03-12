@@ -1,5 +1,6 @@
 import logging
 import os
+import sys
 import json
 import argparse
 import random
@@ -69,7 +70,7 @@ if __name__ == '__main__':
     args = get_argument_parser().parse_args()
     token = get_telegram_bot_token()
     if token is None:
-        print('No bot token. Try running installation_guide.py.')
+        sys.stderr.write('Bot token is not found. Try running installation_guide.py.\n')
         sys.exit()
     updater = telegram.ext.Updater(token)
     updater.bot.database = tinydb.TinyDB(args.file_with_posts)

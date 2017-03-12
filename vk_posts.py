@@ -110,7 +110,7 @@ if __name__ == '__main__':
     page_ids = json.load(args.infile)
     access_token = vk_api.get_access_token()
     if access_token is None:
-        print('No access token was received. Try running installation_guide.py.')
+        sys.stderr.write('No access token was found. Try running installation_guide.py.\n')
         sys.exit()
     logger.info('Getting the news...')
     posts = get_last_vk_posts_of_communities(access_token, page_ids)
