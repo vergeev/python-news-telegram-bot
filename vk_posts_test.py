@@ -26,21 +26,6 @@ class TestVkPosts(unittest.TestCase):
         for post in output:
             self.assertIsInstance(post, dict)
 
-    def test_get_python_posts(self):
-        known_input = [{'text': 'Подборка по Python на все случаи жизни! Хотите?'},
-                       {'text': 'Что-то про Flask'},
-                       {'text': 'Что-то про dJaNgO'},
-                       {'text': 'Практика в open-source проектах часто помогает...'},
-                       ]
-        expected_output = [{'text': 'Подборка по Python на все случаи жизни! Хотите?'},
-                           {'text': 'Что-то про Flask'},
-                           {'text': 'Что-то про dJaNgO'},
-                           ]
-        output = vk_posts.get_good_posts(known_input, vk_posts.is_python_post)
-        self.assertEqual(len(output), len(expected_output))
-        for post in expected_output:
-            self.assertTrue(post in output, post['text'])
-
     def test_form_vk_post_link(self):
         page_id = -30666517
         post_id = 1472604

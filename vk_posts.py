@@ -25,20 +25,13 @@ def get_last_vk_posts_of_communities(access_token, community_ids, posts_per_comm
                                              posts_per_community)
     return posts
 
+
 def is_python_post(post):
     keywords = ['python', 'django', 'flask']
     for keyword in keywords:
         if keyword.lower() in post['text'].lower():
             return True
     return False
-
-
-def get_good_posts(post_list, is_good_post):
-    good_posts = []
-    for post in post_list:
-        if is_good_post(post):
-            good_posts.append(post)
-    return good_posts
 
 
 def extract_post_text_summary(post_text):
@@ -90,7 +83,7 @@ if __name__ == '__main__':
     print('Getting the news...')
     posts = get_last_vk_posts_of_communities(access_token, page_ids)
     print('Filtering the news...')
-    python_posts = get_good_posts(posts, is_python_post)
+    python_posts = list(filter(is_python_post, posts))
     python_stripped_posts = strip_vk_posts(python_posts)
     print('Storing the news...')
     store_to_database(python_stripped_posts, args.outfile)
