@@ -70,7 +70,7 @@ def get_access_token():
 
 def print_no_access_token_error():
     print('No access token in VK_ACCESS_TOKEN environment variable.')
-    print('Please see README.md on how to get it.')  # FIXME: reference installation_guide
+    print('Please run installation_guide.py.')
 
 
 def get_argument_parser():
