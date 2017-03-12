@@ -1,12 +1,12 @@
 import logging
 import os
 import json
-from argparse import ArgumentParser, FileType
-from random import randint
+import argparse
+import random
 
-from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
+import telegram.ext
 
-from database import PostDatabase
+import database
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     level=logging.INFO)
@@ -19,7 +19,7 @@ def display_welcome_message(bot, update):
 
 
 def get_random_post(database):
-    random_id = randint(1, database.size())
+    random_id = random.randint(1, database.size())
     return database.load_post_by_database_id(random_id)
 
 
@@ -51,7 +51,7 @@ def get_command_handlers():
 
 def get_dispatcher_with_command_handlers(bot_dispatcher, command_handlers):
     for command, handler in command_handlers.items():
-        bot_dispatcher.add_handler(CommandHandler(command, handler))
+        bot_dispatcher.add_handler(telegram.ext.CommandHandler(command, handler))
     return bot_dispatcher
 
 
@@ -62,7 +62,7 @@ def start_bot(bot):
 
 
 def get_argument_parser():
-    parser = ArgumentParser()
+    parser = argparse.ArgumentParser()
     parser.add_argument('-v', '--verbose', action='store_true', 
                         help='display log messages')
     parser.add_argument('file_with_posts', help='database containing posts to display')
@@ -72,8 +72,8 @@ def get_argument_parser():
 if __name__ == '__main__':
     args = get_argument_parser().parse_args()
     token = get_telegram_bot_token()
-    updater = Updater(token)
-    updater.bot.database = PostDatabase(args.file_with_posts)
+    updater = telegram.ext.Updater(token)
+    updater.bot.database = database.PostDatabase(args.file_with_posts)
     if args.verbose:
         updater.dispatcher.add_error_handler(log_error)
     command_handlers = get_command_handlers()

@@ -6,7 +6,7 @@ import sys
 import json
 
 import vk_api
-from vk_posts import get_last_vk_community_posts
+import vk_posts
 
 
 def get_vk_public_page_list(access_token, search_queries, results_per_query=20):
@@ -27,8 +27,8 @@ def select_latest_post(vk_post_list):
 
 def is_vk_page_alive(access_token, page_id):
     number_of_posts_to_test = 5
-    posts = get_last_vk_community_posts(access_token, page_id, 
-                                        count=number_of_posts_to_test)
+    posts = vk_posts.get_last_vk_community_posts(access_token, page_id, 
+                                                 count=number_of_posts_to_test)
     latest_post_time_difference = time.time() - select_latest_post(posts)['date']
     if not is_less_than_day(latest_post_time_difference):
         return False

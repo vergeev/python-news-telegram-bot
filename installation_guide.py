@@ -1,10 +1,11 @@
-from os import environ
-from sys import exit
+import os
+import sys
+
 import requests
 
 
 def is_vk_api_app_id_known():
-    return environ.get('VK_API_APP_ID') is not None
+    return os.environ.get('VK_API_APP_ID') is not None
 
 
 def ask_user_for_vk_api_app_id():
@@ -13,7 +14,7 @@ def ask_user_for_vk_api_app_id():
 
 
 def is_vk_access_token_known():
-    return environ.get('VK_ACCESS_TOKEN') is not None
+    return os.environ.get('VK_ACCESS_TOKEN') is not None
 
 
 def form_vk_user_authorization_url():
@@ -38,7 +39,7 @@ def ask_user_for_vk_access_token():
 
 
 def is_telegram_bot_token_known():
-    return environ.get('TELEGRAM_BOT_TOKEN') is not None
+    return os.environ.get('TELEGRAM_BOT_TOKEN') is not None
 
 
 def ask_user_for_telegram_bot_token():
@@ -50,7 +51,7 @@ if __name__ == '__main__':
     if not is_vk_api_app_id_known():
         print('Step 1:')
         ask_user_for_vk_api_app_id()
-        exit()
+        sys.exit()
     if not is_vk_access_token_known():
         print('Step 2:')
         ask_user_for_vk_access_token()

@@ -1,17 +1,17 @@
 import json
 import os
 import html
-from sys import stdin
-from argparse import ArgumentParser, FileType
+import sys
+import argparse
 
-from database import PostDatabase
-from vk_api import wall_get, invoke_with_cooldown, get_access_token
+import database
+import vk_api
 
 
 def get_last_vk_community_posts(access_token, community_id, count=10):
     owner_id = -1 * community_id  # indicate that this is a community
-    post_list = invoke_with_cooldown(wall_get, access_token=access_token, 
-                                     owner_id=owner_id, filter='owner', count=count)
+    post_list = vk_api.invoke_with_cooldown(vk_api.wall_get, access_token=access_token, 
+                                            owner_id=owner_id, filter='owner', count=count)
     return post_list
 
 
@@ -79,13 +79,13 @@ def strip_vk_posts(post_list):
 
 
 def store_to_database(post_list, database_name):
-    db = PostDatabase(database_name)
+    db = database.PostDatabase(database_name)
     db.insert_post_list_uniquely(post_list)
 
 
 def get_argument_parser():
-    parser = ArgumentParser()
-    parser.add_argument('-i', '--infile', type=FileType('r'), default=stdin,
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-i', '--infile', type=argparse.FileType('r'), default=sys.stdin,
                         help='JSON file with vk source page ids')
     parser.add_argument('-o', '--outfile', type=str, default='posts.json', 
                         help='the name of database where posts will be stored')
@@ -95,7 +95,7 @@ def get_argument_parser():
 if __name__ == '__main__':
     args = get_argument_parser().parse_args()
     page_ids = json.load(args.infile)
-    access_token = get_access_token()
+    access_token = vk_api.get_access_token()
     print('Getting the news...')
     posts = get_last_vk_posts_of_communities(access_token, page_ids)
     print('Filtering the news...')
