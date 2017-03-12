@@ -92,3 +92,6 @@ pyvenv.cfg
 
 # Rope project settings
 .ropeproject
+
+# nostests
+man/
