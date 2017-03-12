@@ -1,5 +1,6 @@
 from os import environ
 from sys import exit
+import requests
 
 
 def is_vk_api_app_id_known():
@@ -16,15 +17,15 @@ def is_vk_access_token_known():
 
 
 def form_vk_user_authorization_url():
-    url = 'https://oauth.vk.com/authorize?'\
-          'client_id=%s&'\
-          'scope=offline&'\
-          'redirect_uri=https://oauth.vk.com/blank.html&'\
-          'display=page&'\
-          'v=5.62&'\
-          'response_type=token'
-    url %= environ['VK_API_APP_ID']
-    return url
+    params = {'client_id': environ['VK_API_APP_ID'],
+              'scope': 'offline',
+              'redirect_uri': 'https://oauth.vk.com/blank.html',
+              'display': 'page',
+              'v': '5.62',
+              'response_type': 'token'
+              }
+    request = requests.Request('GET', 'https://oauth.vk.com/authorize', params=params)
+    return request.prepare().url
 
 
 def ask_user_for_vk_access_token():
@@ -58,4 +59,4 @@ if __name__ == '__main__':
         print('Step 3:')
         ask_user_for_telegram_bot_token()
         exit()
-    print('Congratulations. Everything we need is set up.')
+    print('Congratulations! Everything we need is set up.')
