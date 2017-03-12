@@ -32,6 +32,15 @@ The general workflow goes as follows.
   ```
   $ python3 bot.py posts.json
   ```
+  
+## Running tests
+```
+$ nosetests -v --with-coverage
+```
+
+## What to contribute
+- Increase test coverage.
+- Add news sources.
 
 ## Project Goals
 - Complete the assignment for [styleru_py course](http://melevir.com/things/python_styleru/).
@@ -39,4 +48,5 @@ The general workflow goes as follows.
 - Get acquainted with 
   - [VK API](https://vk.com/dev), 
   - [python-telegram-bot](https://python-telegram-bot.org/) module,
-  - venv.
+  - [venv](https://docs.python.org/3/library/venv.html),
+  - GitHub Issues.
