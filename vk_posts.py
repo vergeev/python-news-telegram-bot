@@ -4,7 +4,8 @@ import html
 import sys
 import argparse
 
-import database
+import tinydb
+
 import vk_api
 
 
@@ -78,9 +79,15 @@ def strip_vk_posts(post_list):
     return [strip_irrelevant_post_info(post) for post in post_list]
 
 
-def store_to_database(post_list, database_name):
-    db = database.PostDatabase(database_name)
-    db.insert_post_list_uniquely(post_list)
+def is_dublicate(post, database):
+    return database.contains(tinydb.where('link') == post['link'])
+
+
+def store_posts_to_database(posts, database):
+    for post in posts:
+        if is_dublicate(post, database):
+            continue
+        database.insert(post)
 
 
 def get_argument_parser():
@@ -105,5 +112,6 @@ if __name__ == '__main__':
     filtered_posts = filter_raw_python_posts(posts)
     stripped_filtered_posts = strip_vk_posts(filtered_posts) 
     print('Storing the news...')
-    store_to_database(stripped_filtered_posts, args.outfile)
+    database = tinydb.TinyDB(args.outfile)
+    store_posts_to_database(stripped_filtered_posts, database)
     print('Done.')
