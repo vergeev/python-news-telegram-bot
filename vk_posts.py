@@ -1,5 +1,6 @@
 import json
 import os
+import html
 from sys import stdin
 from argparse import ArgumentParser, FileType
 
@@ -53,7 +54,7 @@ def form_vk_post_link(page_id, post_id):
 
 def strip_irrelevant_post_info(raw_post):
     return {'date': raw_post['date'],
-            'summary': extract_post_text_summary(raw_post['text']),
+            'summary': html.unescape(extract_post_text_summary(raw_post['text'])),
             'link': form_vk_post_link(raw_post['from_id'], raw_post['id']),
             }
 
