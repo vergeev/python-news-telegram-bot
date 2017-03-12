@@ -72,6 +72,12 @@ class TestVkPosts(unittest.TestCase):
         actual_output = vk_posts.extract_post_text_summary(known_input)
         self.assertEqual(actual_output, expected_output)
 
+    def test_extract_post_text_summary_too_short_with_linebreak(self):
+        known_input = 'Анализ со Stack Overflow средствами Python<br>#python #pirsipy'
+        expected_output = 'Анализ со Stack Overflow средствами Python'
+        actual_output = vk_posts.extract_post_text_summary(known_input)
+        self.assertEqual(actual_output, expected_output)
+
 
 if __name__ == '__main__':
     unittest.main()

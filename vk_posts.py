@@ -36,14 +36,18 @@ def is_python_post(post):
 
 def extract_post_text_summary(post_text):
     summary_length = 100
-    if len(post_text) < summary_length:
-        return post_text
+
     first_newline_position = post_text[:summary_length].find('<br>') 
     if first_newline_position != -1:
         return post_text[:first_newline_position]
+
+    if len(post_text) < summary_length:
+        return post_text
+
     last_whitespace_position = post_text[:summary_length].rfind(' ')
     if last_whitespace_position != -1:
         return '%s...' % post_text[:last_whitespace_position]
+
     return '%s...' % post_text[:summary_length]
 
 
