@@ -1,13 +1,15 @@
 import unittest
-from os import remove
+import os
+import sys
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../vk')))
 
 import vk_posts
-from vk_api import get_access_token
+import vk_api
 
 class TestVkPosts(unittest.TestCase):
 
     def test_retrieve_vk_posts_from_single_community(self):
-        access_token = get_access_token()
+        access_token = vk_api.get_access_token()
         number_of_posts = 5
         tproger_page_id = 30666517
         output = vk_posts.get_last_vk_community_posts(access_token, tproger_page_id, 
@@ -17,7 +19,7 @@ class TestVkPosts(unittest.TestCase):
             self.assertIsInstance(post, dict)
     
     def test_retrieve_vk_posts_from_multiple_communities(self):
-        access_token = get_access_token()
+        access_token = vk_api.get_access_token()
         number_of_posts_per_community = 5
         page_ids = [30666517, 54530371]
         output = vk_posts.get_last_vk_posts_of_communities(access_token, page_ids,
