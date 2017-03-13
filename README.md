@@ -3,8 +3,8 @@ The bot grabs a bunch of recent posts from [VK.com](vk.com) communities mentioni
 ## Installation
 Get the sources and follow the instructions in the guide:
 
-1. ```$ git clone https://github.com/patrnk/PythonNewsTelegramBot```
-2. ```$ cd PythonNewsTelegramBot```
+1. ```$ git clone https://github.com/patrnk/python-news-telegram-bot```
+2. ```$ cd python-news-telegram-bot```
 3. ```$ pip3 install -r requierements.txt```
 4. ```$ python3 installation_guide.py```
 
@@ -20,12 +20,12 @@ The general workflow goes as follows.
 1. Create a list of communitites we will get news from:
 
   ```
-  $ python3 vk_sources.py -o vk_sources.json
+  $ python3 vk_sources.py -o ../vk_sources.json
   ```
 2. Get the posts from the communities:
 
   ```
-  $ python3 vk_posts.py -i vk_sources.json -o posts.json
+  $ python3 vk_posts.py -i ../vk_sources.json -o ../posts.json
   ```
 3. Launch the bot:
 
@@ -51,4 +51,5 @@ $ nosetests -v --with-coverage
 - [python-telegram-bot](https://python-telegram-bot.org/)
 - [venv](https://docs.python.org/3/library/venv.html)
 - GitHub Issues
-- basic logging
+- Basic logging
+- Project structuring.
