@@ -34,10 +34,11 @@ The general workflow goes as follows.
   ```
   
 ## Running tests
-From project directory, run
+From root project directory, run
 ```
-$ nosetests -v --with-coverage
+$ python3 -m pytest tests --cov . --cov-config .coveragerc
 ```
+Don't forget to add your virtual environment directory to `.coveragerc`.
 
 ## What to contribute
 - Increase test coverage.
