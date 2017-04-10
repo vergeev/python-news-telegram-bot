@@ -1,11 +1,12 @@
-import unittest
 import os
 import sys
+
+import vcr_unittest
 
 from vk import vk_api
 
 
-class TestVkRequest(unittest.TestCase):
+class TestVkRequest(vcr_unittest.VCRTestCase):
     
     def test_make_api_request_without_access_token(self):
         output = vk_api.make_vk_api_request('users.get', user_ids=1, fields='screen_name')
@@ -49,4 +50,4 @@ class TestVkRequest(unittest.TestCase):
     
 
 if __name__ == '__main__':
-    unittest.main()
+    vcr_unittest.main()

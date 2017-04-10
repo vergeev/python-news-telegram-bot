@@ -1,12 +1,13 @@
-import unittest
 import os
 import sys
+
+import vcr_unittest
 
 from vk import vk_sources
 from vk import vk_api
 
 
-class TestVkSources(unittest.TestCase):
+class TestVkSources(vcr_unittest.VCRTestCase):
 
     def test_retrieve_public_pages_from_vk(self):
         access_token = vk_api.get_access_token()
@@ -38,5 +39,6 @@ class TestVkSources(unittest.TestCase):
         output = vk_sources.filter_vk_pages(access_token, known_input, filtering_rule)
         self.assertEqual(output, expected_output)
 
+
 if __name__ == '__main__':
-    unittest.main()
+    vcr_unittest.main()

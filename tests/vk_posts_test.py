@@ -1,12 +1,13 @@
-import unittest
 import os
 import sys
+
+import vcr_unittest
 
 from vk import vk_posts
 from vk import vk_api
 
 
-class TestVkPosts(unittest.TestCase):
+class TestVkPosts(vcr_unittest.VCRTestCase):
 
     def test_retrieve_vk_posts_from_single_community(self):
         access_token = vk_api.get_access_token()
@@ -82,4 +83,4 @@ class TestVkPosts(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    unittest.main()
+    vcr_unittest.main()
