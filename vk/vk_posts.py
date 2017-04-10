@@ -7,7 +7,7 @@ import logging
 
 import tinydb
 
-import vk_api
+from vk import vk_api
 
 
 logging.basicConfig(level=logging.INFO)

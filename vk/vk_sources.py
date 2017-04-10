@@ -6,8 +6,8 @@ import sys
 import json
 import logging
 
-import vk_api
-import vk_posts
+from vk import vk_api
+from vk import vk_posts
 
 
 logging.basicConfig(level=logging.INFO)
